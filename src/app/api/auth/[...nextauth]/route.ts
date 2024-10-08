@@ -1,8 +1,12 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import prisma from "@/lib/prisma"
+import type { User, Session } from "next-auth"
 
-const handler = NextAuth({
+export const authOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -14,19 +18,21 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+    async session({ session, user }: { session: Session; user: User }) {
+      if (session.user) {
+        session.user.id = user.id;
+      } else {
+        session.user = { id: user.id };
+      }
+      return session;
     },
   },
   pages: {
     signIn: '/signin',
-    // Explicitly set the home page as the default callback
-    newUser: '/' // New users will be directed here on first sign in
+    newUser: '/'
   },
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
