@@ -20,7 +20,7 @@ export default function SignIn() {
     <div>
       {Object.values(providers).map((provider: any) => (
         <div key={provider.name}>
-          <button onClick={() => signIn(provider.id)}>
+          <button onClick={() => signIn(provider.id, { callbackUrl: '/' })}>
             Sign in with {provider.name}
           </button>
         </div>
