@@ -11,10 +11,10 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.6.0",
     "@prisma/client": "^5.20.0",
-    "next": "14.2.14",
-    "next-auth": "^4.24.8",
-    "react": "^18",
-    "react-dom": "^18",
+    "next": "^13.4.0",
+    "next-auth": "^4.22.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "resend": "^4.0.0"
   },
   "devDependencies": {

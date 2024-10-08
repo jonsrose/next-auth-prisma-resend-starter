@@ -4,23 +4,10 @@ import Link from 'next/link'
 import { withAuth } from '@/components/withAuth'
 import { signOut } from 'next-auth/react'
 
-function Home() {
+export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Welcome to the Home Page</h1>
-      <Link href="/hi">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-          Go to Hi Page
-        </button>
-      </Link>
-      <button
-        onClick={() => signOut({ callbackUrl: '/signin' })}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Sign Out
-      </button>
+    <main>
+      <h1>Welcome to my Next.js app!</h1>
     </main>
   )
 }
-
-export default withAuth(Home)
