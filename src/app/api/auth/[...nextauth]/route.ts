@@ -1,9 +1,13 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
+import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "@/lib/prisma"
 import type { User, Session } from "next-auth"
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -15,6 +19,18 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    EmailProvider({
+      from: process.env.EMAIL_FROM,
+      sendVerificationRequest: async ({ identifier: email, url }) => {
+        const { host } = new URL(url)
+        await resend.emails.send({
+          from: process.env.EMAIL_FROM!,
+          to: email,
+          subject: `Sign in to ${host}`,
+          html: `<p>Click <a href="${url}">here</a> to sign in.</p>`
+        })
+      },
     }),
   ],
   callbacks: {
