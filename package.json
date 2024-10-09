@@ -1,5 +1,5 @@
 {
-  "name": "aiutils",
+  "name": "next-auth-prisma-resend-starter",
   "version": "0.1.0",
   "private": true,
   "scripts": {
