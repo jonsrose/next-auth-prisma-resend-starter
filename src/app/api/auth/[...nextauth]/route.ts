@@ -7,8 +7,18 @@ import { PrismaClient } from "@prisma/client"
 import type { User, Session } from "next-auth"
 import { Resend } from 'resend'
 import { Account } from "next-auth";
+import { NextAuthOptions } from "next-auth";
+import { DefaultSession } from "next-auth";
 
 const prismaClient = new PrismaClient()
+
+declare module "next-auth" {
+  interface Session {
+    user?: DefaultSession["user"] & {
+      id: string
+    }
+  }
+}
 
 async function linkAccount(user: User, account: Account) {
   // Check if there's an existing account with the same email
@@ -92,7 +102,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, email, credentials }) {
+    async signIn({ user, account }) {
       // Custom sign-in logic here
       if (account) {
         return await linkAccount(user, account)
